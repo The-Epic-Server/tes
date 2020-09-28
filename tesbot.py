@@ -135,4 +135,4 @@ async def on_message(message):
         if any(x in message.content.lower() for x in blocked_words):
             await message.delete()
         await bot.process_commands(message)
-bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.A_cI2TUqJ42LsnHhI1iogB7Iq1U')
+bot.run('')
