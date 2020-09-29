@@ -72,4 +72,4 @@ async def mkdir(ctx, location, name):
     os.system(f'cmd /c "cd C:\\Users\\rhone\{location} & mkdir {name}"')
     await ctx.send(f"Created directory {name} at {location}")
 
-bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.J4gu8q48j9lq5LMNVGxVAl3XW2s')
+bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.o_01ZzK0Tg9ZQyAj9xNPcMaaxcI')
