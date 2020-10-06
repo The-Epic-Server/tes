@@ -1,4 +1,5 @@
 import os
+import subprocess
 import discord
 from discord.ext import commands
 print("Starting up pc control")
@@ -18,13 +19,12 @@ set <file> <text>: Resets a file and replaces it with the typed text. Use &n for
 edit <file> <text>: Adds the typed text to the end of a file. Use &n for a new line.
 print <file>: Shows the text inside a file.
 back <file> <amount>: Removes characters from the end of a file.
-mkfile <location> <name>: Creates a file at the location selected. The default location is C:\\Users\\me
-mkdir <location> <name>: Creates a folder at the location selected. The default location is C:\\Users\\me```''')
+mkfile <name> <location>: Creates a file at the location selected. The default location is C:\\Users\\me
+mkdir <name> <location>: Creates a folder at the location selected. The default location is C:\\Users\\me```''')
 
 @bot.command()
-async def cmd(ctx, *, command):
-    os.system(f'cmd /c "cd C:\\Users\\rhone & {command}"')
-    await ctx.send(f"Running command: {command}")
+async def runcommand(ctx, *, commandtorun):
+    print(list(commandtorun.split(" ")))
 
 @bot.command()
 async def set(ctx, file, *, text):
@@ -63,13 +63,18 @@ async def back(ctx, file, amount=1):
     await ctx.send(f"Deleted {amount} characters from the end of {file}")
 
 @bot.command()
-async def mkfile(ctx, location, name):
-    os.system(f'cmd /c "cd C:\\Users\\rhone\{location} & echo. > {name}"')
+async def mkfile(ctx, name, location="C:\\Users\\rhone"):
+    os.system(f'cmd /c "cd {location} & echo. > {name}"')
     await ctx.send(f"Created file {name} at {location}")
 
 @bot.command()
-async def mkdir(ctx, location, name):
-    os.system(f'cmd /c "cd C:\\Users\\rhone\{location} & mkdir {name}"')
+async def mkdir(ctx, name, location="C:\\Users\\rhone"):
+    os.system(f'cmd /c "cd {location} & mkdir {name}"')
     await ctx.send(f"Created directory {name} at {location}")
 
-bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.o_01ZzK0Tg9ZQyAj9xNPcMaaxcI')
+@bot.command()
+async def list(ctx, directory="C:\\Users\\rhone"):
+    files = os.listdir(f"{directory}")
+    await ctx.send(f"The files/directories in {directory} are: {files}")
+
+bot.run('')
