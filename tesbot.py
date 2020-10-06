@@ -4,10 +4,15 @@ from discord.utils import get
 import asyncio
 import random
 import time
-my_file = open("blocked-words.txt", "r")
-content = my_file.read()
+file = open("blocked-words.txt", "r")
+content = file.read()
 blocked_words = content.split(" ")
-my_file.close()
+file.close()
+
+randomfile = open("random-words.txt", "r")
+randomcontent = randomfile.read()
+random_words = randomcontent.split(" ")
+randomfile.close()
 
 bot = commands.Bot(command_prefix='/')
 bot.remove_command('help')
@@ -60,6 +65,14 @@ website Shows a fancy message displaying the website link!```''')
         await ctx.send(f"```{command} unknown command. Type /help for help.```")
 
 @bot.command()
+async def python(ctx, *, codescript):
+    print(codescript)
+    rancode = exec(codescript)
+    rancode = rancode[:-4]
+    print(rancode)
+    await ctx.send(rancode)
+    
+@bot.command()
 async def mention(ctx, person, times):
     times = int(times)
     times = times - 1
@@ -100,15 +113,6 @@ async def rps(ctx, choice):
         await ctx.send('I chose rock and I win!')
     else:
         await ctx.send('Scouts %s' % botchoice)
-
-@bot.command()
-async def timer(ctx, time):
-    if time > 10:
-        int(time)
-        time = time + 1
-        for x in range(1, time):
-            time.sleep(1)
-            ctx.send(x)
             
 @bot.command()
 async def message(ctx, member: discord.Member, *, content):
@@ -126,6 +130,8 @@ async def on_reaction_add(reaction, user):
         await reaction.message.channel.send('👍')
 @bot.event
 async def on_message(message):
+        if message.author == bot.user:
+            return
         if message.content == '/website':
             embed=discord.Embed(title="The Epic Server Website", url="https://www.theepicserver.tk", description="Join The Epic Server website!", color=0x9b24c6)
             embed.set_thumbnail(url="https://lh6.googleusercontent.com/mFKlaNq8GWQan7JwZe95lYlj6T6BlPVZ3IkYKy8ZAglRW5cYD_KJouuzKQj0ZD6HgzQcvyM=w16383")
@@ -134,5 +140,28 @@ async def on_message(message):
             
         if any(x in message.content.lower() for x in blocked_words):
             await message.delete()
+
+        if message.content == '/speedtype':
+            words = [random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words), random.choice(random_words)]
+            words = " ".join(words)
+            await message.channel.send("You will have 60 seconds to type the text")
+            await message.channel.send("Please don't copy paste")
+            await message.channel.send("3")
+            time.sleep(1)
+            await message.channel.send("2")
+            time.sleep(1)
+            await message.channel.send("1")
+            time.sleep(1)
+            await message.channel.send("GO!")
+            await message.channel.send("Type this:")
+            await message.channel.send(words)
+            starttime = time.time()
+            msg = await bot.wait_for('message', timeout=60)
+            youtyped = msg.content
+            await message.channel.send(f'You typed: ```{youtyped}```')
+            stoptime = time.time()
+            fulltime = stoptime-starttime
+            fulltime = round(fulltime)
+            await message.channel.send (f"You took: **{fulltime}** seconds!")
         await bot.process_commands(message)
-bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.o_01ZzK0Tg9ZQyAj9xNPcMaaxcI')
+bot.run('token')
