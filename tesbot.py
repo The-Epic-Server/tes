@@ -4,6 +4,11 @@ from discord.utils import get
 import asyncio
 import random
 import time
+import os
+import requests
+from lxml import html
+import re
+
 file = open("blocked-words.txt", "r")
 content = file.read()
 blocked_words = content.split(" ")
@@ -15,69 +20,115 @@ random_words = randomcontent.split(" ")
 randomfile.close()
 
 bot = commands.Bot(command_prefix='/')
-bot.remove_command('help')
-
 @bot.event
 async def on_ready():
     print('Logged on as The Epic Server#6298')
+    game = discord.Game("Being Epic | /help")
+    await bot.change_presence(activity=game, status=discord.Status.online)
+
+@bot.command()
+async def python(ctx, *, script=None):
+    if script != None:
+        script = script.replace("```python", "")
+        script = script.replace("```py", "")
+        script = script.replace("```", "")
+        script = script.replace("stdin", "")
+        script = script.replace("input(", "")
+        script = script.replace("open(", "")
+        script = script.replace("import discord", "")
+        script = script.replace("import os", "")
+        script = script.replace("import subprocess", "")
+        with open("script.py", "w") as f:
+            f.write(script)
+        stream = os.popen('''python3 script.py''')
+        output = stream.read()
+        if output == "":
+            output = "No output."
+        embed=discord.Embed(title="Python Script", description='```%s```' % output)
+        await ctx.send(embed=embed)
+    else:
+        embed=discord.Embed(title="Python Script", description='''Run python in discord!
+This is intended to be a simple to use, lightweight python script executor. You can run anything from a simple hello world to advanced computing!
+Some features are disabled, such as standard input, exiting, and opening files.
+All other python 3.8 features have full functionality. Have fun!
+
+Code Blocks:
+Code blocks are a simple and awesome feature that lets you make your code neater!
+When running this command (/python <script>) Use **```python** for your code. (make sure to end it with ``` too!)
+This will allow you to use new lines without pressing shift enter, will enable pressing tab, and color coding your code!''')
+        await ctx.send(embed=embed)
+
 
 @bot.command()
 async def ping(ctx):
-    await ctx.send('pong')
+    await ctx.send(f"Pong! `{round(bot.latency*1000, 1)}ms`")
 
 @bot.command()
-async def help(ctx, command=None):
-    if command == None:
-        await ctx.send('''**The Epic Server Help Menu**
-**Prefix**
-```To execute any command on the epic server, you the prefix / followed by a command. Different bots have different prefixes.```
-**Arguments**
-```Many command have arguments, or extra text added after to change the outcome. An argument is shown with <argument>. If an argument has + at the end, it means it can be multi word.```
-**Commands**
-```help <command> Show this list
-
-ping Nothing special. Just to ping the bot and check if it responds.
-
-mention <person> <times> A little prank. Can be used to spam someone. Times caps out at 10.
-
-cname <person> <name+> Change someone name. Can only be used by admins.
-
-delete <amount> Deletes a certain amount of messages. Can only be used my admins.
-
-rps <rock/paper/scissors> Play a game of rock, paper, scissors with the bot!
-
-message <person> <message+> Send a dm to someone using the bot!
-
-website Shows a fancy message displaying the website link!```''')
-    elif command == "ping":
-        await ctx.send("```ping Nothing special. Just to ping the bot and check if it responds.```")
-    elif command == "mention":
-        await ctx.send("```mention <person> <times> A little prank. Can be used to spam someone. Times caps out at 10.```")
-    elif command == "cname":
-        await ctx.send("```cname <person> <name+> Change someone name. Can only be used by admins.```")
-    elif command == "rps":
-        await ctx.send("```rps <rock/paper/scissors> Play a game of rock, paper, scissors with the bot!```")
-    elif command == "website":
-        await ctx.send("```website Shows a fancy message displaying the website link!```")
-    elif command == "delete":
-        await ctx.send("```delete <amount> Deletes a certain amount of messages. Can only be used my admins.```")
+@commands.has_permissions(administrator=True)
+async def status(ctx, *, description=None):
+    if description == None:
+        game = discord.Game("Being Epic | /help")
+        await bot.change_presence(activity=game, status=discord.Status.online)
+        await ctx.send("Reset my description!")
     else:
-        await ctx.send(f"```{command} unknown command. Type /help for help.```")
+        game = discord.Game(description)
+        await bot.change_presence(activity=game, status=discord.Status.online)
+        await ctx.send(f"Changed my description to {description}")
 
 @bot.command()
-async def python(ctx, *, codescript):
-    print(codescript)
-    rancode = exec(codescript)
-    rancode = rancode[:-4]
-    print(rancode)
-    await ctx.send(rancode)
-    
+async def mcskin(ctx, ign):
+    site = requests.get("https://mcuuid.net/?q=%s" % ign)
+    sitetext = site.text
+    with open("site.html", "w") as f:
+        f.write(sitetext)
+    root = html.parse("site.html").getroot()
+    element = root.get_element_by_id("results_avatar_body")
+    r = str(html.tostring(element))
+    r = r.replace('''b'<img id="results_avatar_body" class="img-fluid mx-auto" src="''', "")
+    r = r.replace('''\\'s Body" loading="lazy">\'''', "")
+    r = re.sub(ign, "", r, flags=re.IGNORECASE)
+    r = r.replace('''" alt="''', "")
+    embed=discord.Embed(title="%s's Skin" % ign, url="https://namemc.com/profile/%s.1" % ign)
+    embed.set_thumbnail(url=r)
+    await ctx.send(embed=embed)
+
 @bot.command()
-async def mention(ctx, person, times):
-    times = int(times)
-    times = times - 1
-    for x in range(0, times):  
-        await ctx.send(f'hey {person}')
+@commands.has_permissions(administrator=True)
+async def kick(ctx, member: discord.Member, *, reason="Hit by the boot!"):
+    embed=discord.Embed(title="Kick!", description=f"Kicked member {member.mention} for reason: {reason}", color=0x00d4fa)
+    await ctx.send(embed=embed)
+    await member.kick()
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def ban(ctx, member: discord.Member, *, reason="The ban hammer has spoken!"):
+    embed=discord.Embed(title="Ban!", description=f"Banned member {member.mention} for reason: {reason}", color=0x00d4fa)
+    await ctx.send(embed=embed)
+    await member.ban()
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def mute(ctx, member: discord.Member, *, reason="Chat offense"):
+    embed=discord.Embed(title="Mute!", description=f"Muted member {member.mention} for reason: {reason}", color=0x00d4fa)
+    await ctx.send(embed=embed)
+    role = get(member.guild.roles, name="Muted")
+    await member.add_roles(role)
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def unban(ctx, id: int, *, reason="Appealed"):
+    user = await bot.fetch_user(id)
+    await discord.Guild.unban(ctx.author.guild, user)
+    embed=discord.Embed(title="Unban!", description=f"Unbanned member {user.mention} for reason: {reason}", color=0x00d4fa)
+    await ctx.send(embed=embed)
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def unmute(ctx, member: discord.Member, *, reason="Mute time up"):
+    role = get(member.guild.roles, name="Muted")
+    await member.remove_roles(role)
+    embed=discord.Embed(title="Unmute!", description=f"Unmuted member {member.mention} for reason: {reason}", color=0x00d4fa)
+    await ctx.send(embed=embed)
 
 @bot.command()
 @commands.has_permissions(administrator=True)
@@ -164,4 +215,4 @@ async def on_message(message):
             fulltime = round(fulltime)
             await message.channel.send (f"You took: **{fulltime}** seconds!")
         await bot.process_commands(message)
-bot.run('token')
+bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.ZucpHuzQEapmL5LTD52oqG5ZLqg')
