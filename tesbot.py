@@ -215,4 +215,5 @@ async def on_message(message):
             fulltime = round(fulltime)
             await message.channel.send (f"You took: **{fulltime}** seconds!")
         await bot.process_commands(message)
-bot.run('NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.ZucpHuzQEapmL5LTD52oqG5ZLqg')
+with open("token.txt") as f:
+    bot.run(f.read())
