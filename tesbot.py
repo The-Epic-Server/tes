@@ -8,6 +8,7 @@ import os
 import requests
 from lxml import html
 import re
+import json
 
 file = open("blocked-words.txt", "r")
 content = file.read()
@@ -25,6 +26,15 @@ async def on_ready():
     print('Logged on as The Epic Server#6298')
     game = discord.Game("Being Epic | /help")
     await bot.change_presence(activity=game, status=discord.Status.online)
+
+def save(savemap, file):
+    with open(file, "w") as f:
+        json.dump(savemap, f)
+
+def load(file):
+    with open(file) as f:
+        loadmap = json.load(f)
+        return loadmap
 
 @bot.command()
 async def python(ctx, *, script=None):
@@ -51,7 +61,6 @@ async def python(ctx, *, script=None):
 This is intended to be a simple to use, lightweight python script executor. You can run anything from a simple hello world to advanced computing!
 Some features are disabled, such as standard input, exiting, and opening files.
 All other python 3.8 features have full functionality. Have fun!
-
 Code Blocks:
 Code blocks are a simple and awesome feature that lets you make your code neater!
 When running this command (/python <script>) Use **```python** for your code. (make sure to end it with ``` too!)
@@ -74,6 +83,53 @@ async def status(ctx, *, description=None):
         game = discord.Game(description)
         await bot.change_presence(activity=game, status=discord.Status.online)
         await ctx.send(f"Changed my description to {description}")
+
+@bot.command()
+async def tag(ctx, cmd=None, name=None, *, message=None):
+    if cmd == None:
+        await ctx.send('''Please enter a sub command!
+        Sub commands: 
+        /tag add <name> <message>
+        /tag remove <name>
+        /tag list''')
+    else:
+        tags = load("tags.json")
+        if cmd == "add":
+            if name != None and message != None:
+                if name in tags:
+                    await ctx.send("That name already exists! Please pick a new one.")
+                    return
+                else:
+                    tags[name] = message
+                    save(tags, "tags.json")
+                    await ctx.send("Added " + name + " to the tags!")
+            else:
+                await ctx.send("Please provide a name and message!")
+        elif cmd == "remove":
+            if name != None:
+                if not name in tags:
+                    await ctx.send("That name does not exist! Please enter a new one.")
+                    return
+                else:
+                    del(tags[name])
+                    save(tags, "tags.json")
+                    await ctx.send("Removed " + name + " from the tags")
+            else:
+                await ctx.send("Please provide a name!")
+        elif cmd == "list":
+            tags = load("tags.json")
+            taglist = ""
+            for tag in tags:
+                taglist = taglist + f"{tag}, "
+            taglist = taglist[:-2]
+            await ctx.send("Here are all of the tags:")
+            await ctx.send(f"```{taglist}```")
+        else:
+            await ctx.send('''Please enter a valid sub command!
+        Sub commands: 
+        /tag add <name> <message>
+        /tag remove <name>''')
+
 
 @bot.command()
 async def mcskin(ctx, ign):
@@ -214,6 +270,13 @@ async def on_message(message):
             fulltime = stoptime-starttime
             fulltime = round(fulltime)
             await message.channel.send (f"You took: **{fulltime}** seconds!")
+        
+        if message.content.startswith("/"):
+            tags = load("tags.json")
+            tag = message.content.replace("/", "")
+            if tag in tags:
+                await message.channel.send(tags[tag])
+
         await bot.process_commands(message)
 with open("token.txt") as f:
     bot.run(f.read())
