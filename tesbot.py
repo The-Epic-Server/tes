@@ -199,6 +199,28 @@ async def delete(ctx, amount):
     await ctx.channel.purge(limit=amount)
 
 @bot.command()
+async def serverinfo(ctx):
+    server = ctx.author.guild
+    name = server.name
+    members = server.member_count
+    created = str(server.created_at).split(" ")[0]
+    roles = len(server.roles)
+    region = str(server.region)
+    emojis = len(server.emojis)
+    icon = server.icon_url
+    owner = str(server.owner)
+    embed=discord.Embed(title="Server Info", description="The important server info that nobody wants", color=0x1e00ff)
+    embed.set_thumbnail(url=icon)
+    embed.add_field(name="Name", value=name, inline=True)
+    embed.add_field(name="Roles", value=roles, inline=True)
+    embed.add_field(name="Owner", value=owner, inline=True)
+    embed.add_field(name="Created", value=created, inline=True)
+    embed.add_field(name="Region", value=region, inline=True)
+    embed.add_field(name="Members", value=members, inline=True)
+    embed.add_field(name="Emojis", value=emojis, inline=True)
+    await ctx.send(embed=embed)
+
+@bot.command()
 async def rps(ctx, choice):
     choices = ['rock', 'paper', 'scissors']
     botchoice = random.choice(choices)
