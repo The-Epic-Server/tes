@@ -273,7 +273,7 @@ async def on_message(message):
         
         if message.content.startswith("/"):
             tags = load("tags.json")
-            tag[0] = ""
+            tag = message.content.replace("/", "")
             if tag in tags:
                 await message.channel.send(tags[tag])
 
