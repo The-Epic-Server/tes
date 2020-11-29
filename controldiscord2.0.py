@@ -44,6 +44,9 @@ async def mouse(ctx, x=0, y=0):
 
 @bot.command()
 async def key(ctx, key, time=1):
+    if "alt" in key and "f4" in key:
+        await ctx.send("nah mate")
+        return
     await ctx.send("Pressing " + key + " for " + str(time) + " seconds")
     for x in range(0, time):
         keyboard.press(key)
