@@ -46,4 +46,5 @@ async def on_ready():
     events = database.load("events.json")
     print(events)
     maintask.start()
-bot.run("NzQwMzc1MzA0NTcyMzcwOTc0.XyoGPA.c7uWmGf8NEWHmVdJ2ceJbu_pWyQ")
+with open("token.txt") as f: 
+    bot.run(f.read())
