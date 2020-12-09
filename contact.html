@@ -1,0 +1,56 @@
+<html>
+  <head>
+        <!--Scaleable sidebar from cloudflare-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!--Image icons from google-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <!--Load stylesheet-->
+        <link rel="stylesheet" href="style.css">
+        <!-- Lightweight client-side loader that feature-detects and load polyfills only when necessary -->
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
+        <!-- Load the element definition -->
+        <script type="module" src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"></script>
+        <!--Set favicon and title-->
+        <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/TKDKid1000/tes/master/images/logo.png"/>
+        <title>The Epic Server</title>
+    </head>
+    <body>
+        <!--Script.js script tag-->
+        <script src="script.js"></script>
+        <div class="topnav" id="myTopnav">
+            <a href="index.html" class="active"><i class="material-icons">home</i> Home</a>
+            <a href="news.html"><i class="material-icons">campaign</i> News</a>
+            <a href="contact.html"><i class="material-icons">email</i> Contact</a>
+            <a href="about.html"><i class="material-icons">description</i> About</a>
+            <a href="javascript:void(0);" class="icon" onclick="shrinkSidebar()">
+                <i class="fa fa-bars"></i>
+            </a>
+        </div>
+        <!--Everything after this is the body content-->
+        <script src="https://smtpjs.com/v3/smtp.js"></script>  
+        <h1>Contact</h1>
+        <p>You <i>might</i> need to get in contact with us. We provide that help. Fill out the below form and it will auto message us.</p>
+        <br>
+        <p><strong>Enter support info</strong></p>
+        <textarea id="emailbody" placeholder="Enter what you want help with"></textarea>
+        <input type="text" id="from" placeholder="Discord name and tag">
+        <button onclick="sendEmail()">Send</button>
+        <script type="text/javascript">
+            function sendEmail() {
+                Email.send({
+                    Host: "smtp.gmail.com",
+                    Username : "javaalertbot@gmail.com",
+                    Password : "a1b2c3d4e5f6g7h8",
+                    To : "the.epic.server.123@gmail.com",
+                    From : "javaalertbot@gmail.com",
+                    Subject : document.getElementById("from").value + "'s support ticket'",
+                    Body : document.getElementById("emailbody").value,
+                })
+                .then(function(message){
+                    alert("mail sent successfully")
+                });
+            }
+        </script>
+    </body>
+</html>
