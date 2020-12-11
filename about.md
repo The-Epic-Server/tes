@@ -38,9 +38,3 @@ A wiki for **The Epic Bot** is found [here](https://github.com/TKDKid1000/tes/wi
 We also play many *many* games on our discord. You want to suggest a game? Pop on by our [server suggestions](https://discord.com/channels/712966305476509726/720305574360907778) channel and leave us a tip!
 We currently host our own minecraft server as well! You can join it on Minecraft Java Edition with the ip **mc.theepicserver.tk** or on Minecraft Bedrock Edition with the ip **mc.theepicserver.tk** Port 19132.
 We will continue to host more and more games as want for them increases!
-
-```python
-def end():
-  print("See ya there!")
-end()
-```
