@@ -130,5 +130,27 @@ class botCommands(commands.Cog):
         channel = await member.create_dm()
         await channel.send(content)
 
+    @commands.command(brief="reports a user")
+    async def report(self, ctx, member: discord.Member=None, *, reason=None):
+        if member == None or reason == None:
+            await ctx.send("Please specify a member and a reason!")
+            return
+        reports = load("reports.json")
+        reports.append([ctx.author.mention, member.mention, reason])
+        save(reports, "reports.json")
+        await ctx.send("Reported " + member.mention + " for " + reason)
+
+    @commands.command(brief="suggest we add your bot to our server")
+    async def addbot(self, ctx, id: int=None, reason=None):
+        if id == None or reason == None:
+            await ctx.send("Please provide your bots id and a reason!")
+        elif len(reason.split(" ")) < 100:
+            await ctx.send("Your reason isn't descriptive enough! Please make it ~100 words.")
+        else:
+            await ctx.send("We have sent you request to an admin, and will dm you when we see it.")
+            reports = load("bots.json")
+            
+
+
 def setup(bot):
     bot.add_cog(botCommands(bot))

@@ -62,7 +62,7 @@ class modCommands(commands.Cog):
 
     @commands.command(brief="changes the name of a member")
     @commands.has_permissions(administrator=True)
-    async def cname(self, ctx, person: discord.Member, name):
+    async def cname(self, ctx, person: discord.Member, *, name):
         await person.edit(nick=name)
 
     @commands.command(brief="deletes a certain amount of messages")
@@ -97,6 +97,25 @@ class modCommands(commands.Cog):
         with open("prize.txt", "w") as f:
             f.write(code)
         await ctx.send("Set the prize code to " + code)
+
+    @commands.command(brief="views a reports by its id number")
+    @commands.has_permissions(administrator=True)
+    async def viewreports(self, ctx, id=None):
+        reports = load("reports.json")
+        if id == None:
+            await ctx.send("The latest report is number " + str(len(reports)-1))
+            return
+        try:
+            reportnum = int(id)
+        except (TypeError, ValueError):
+            await ctx.send("Thats not a valid id!")
+            return
+        try:
+            report = reports[reportnum]
+        except IndexError:
+            await ctx.send("Not a valid report")
+            return
+        await ctx.send(f'''{report[1]}'s Report\nIssuer: {report[0]}\n{report[2]}''')
 
 def setup(bot):
     bot.add_cog(modCommands(bot))
