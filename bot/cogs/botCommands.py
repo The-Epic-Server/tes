@@ -7,7 +7,6 @@ import random
 import time
 import os
 import requests
-from lxml import html
 import json
 import re
 def save(savemap, file):

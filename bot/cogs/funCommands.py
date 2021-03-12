@@ -7,7 +7,7 @@ import random
 import time
 import os
 import requests
-from lxml import html
+import base64
 import json
 import re
 def save(savemap, file):
@@ -75,19 +75,15 @@ class funCommands(commands.Cog):
 
     @commands.command(brief="shows the skin of any minecraft java player")
     async def mcskin(self, ctx, ign):
-        site = requests.get("https://mcuuid.net/?q=%s" % ign)
-        sitetext = site.text
-        with open("site.html", "w") as f:
-            f.write(sitetext)
-        root = html.parse("site.html").getroot()
-        element = root.get_element_by_id("results_avatar_body")
-        r = str(html.tostring(element))
-        r = r.replace('''b'<img id="results_avatar_body" class="img-fluid mx-auto" src="''', "")
-        r = r.replace('''\\'s Body" loading="lazy">\'''', "")
-        r = re.sub(ign, "", r, flags=re.IGNORECASE)
-        r = r.replace('''" alt="''', "")
+        uuid = json.loads(requests.get("https://api.mojang.com/users/profiles/minecraft/%s" % ign).text)["id"]
+        data = json.loads(requests.get("https://sessionserver.mojang.com/session/minecraft/profile/%s" % uuid).text)
+        base64_message = data["properties"][0]["value"]
+        base64_bytes = base64_message.encode('ascii')
+        message_bytes = base64.b64decode(base64_bytes)
+        message = message_bytes.decode('ascii')
         embed=discord.Embed(title="%s's Skin" % ign, url="https://namemc.com/profile/%s.1" % ign)
-        embed.set_thumbnail(url=r)
+        skindata = json.loads(message)
+        embed.set_thumbnail(url=skindata["textures"]["SKIN"]["url"])
         await ctx.send(embed=embed)
 
     @commands.command(brief="adds the @random role to a member")

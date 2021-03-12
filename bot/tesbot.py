@@ -7,7 +7,6 @@ import random
 import time
 import os
 import requests
-from lxml import html
 import json
 import re
 file = open("blocked-words.txt", "r")
@@ -37,15 +36,16 @@ class Bot(commands.Bot):
         game = discord.Game("Being Epic | /help")
         await self.change_presence(activity=game, status=discord.Status.online)
 
+    async def on_member_join(self, member: discord.Member):
+        role = get(member.guild.roles, name="Default")
+        await member.add_roles(role)
+        channel = get(member.guild.channels, name="welcome")
+        await channel.send("Welcome " + member.mention + " to TES! Have fun!")
+
     async def on_command_error(self, ctx, error):
         if isinstance(error, CommandNotFound):
             return
         raise error
-
-    async def on_reaction_add(self, reaction, user):
-        if str(reaction.emoji) == '👍':
-            await reaction.message.channel.send('👍')
-
 
     async def on_message(self, message):
             if message.author == self.user:
