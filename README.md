@@ -2,9 +2,9 @@
 ![tes logo](https://raw.githubusercontent.com/TKDKid1000/tes/master/docs/images/logo.png)
 
 [![Discord](https://img.shields.io/discord/712966305476509726?logo=discord)](https://discord.gg/dvKTpCKBFC)
-[![Build Status](https://img.shields.io/github/forks/the-epic-server/tes.svg)](https://github.com/the-epic-server/tes)
-[![Build Status](https://img.shields.io/github/stars/the-epic-server/tes.svg)](https://github.com/the-epic-server/tes)
-[![License](https://img.shields.io/github/license/the-epic-server/tes.svg)](https://github.com/the-epic-server/tes)
+[![Forks](https://img.shields.io/github/forks/the-epic-server/tes.svg)](https://github.com/The-Epic-Server/tes/network/members)
+[![Stars](https://img.shields.io/github/stars/the-epic-server/tes.svg)](https://github.com/The-Epic-Server/tes/stargazers)
+[![License](https://img.shields.io/github/license/the-epic-server/tes.svg)](https://github.com/The-Epic-Server/tes/blob/master/LICENSE.md)
 The Epic Server Github
 
 This repo has multiple things. From the source code to our bot, to our projects and server goals!
