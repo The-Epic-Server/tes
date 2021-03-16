@@ -1,5 +1,5 @@
 # TES
-![tes logo](https://raw.githubusercontent.com/TKDKid1000/tes/master/images/logo.png)
+![tes logo](https://raw.githubusercontent.com/TKDKid1000/tes/master/docs/images/logo.png)
 
 The Epic Server Github
 
