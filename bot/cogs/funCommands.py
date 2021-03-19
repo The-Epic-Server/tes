@@ -83,7 +83,7 @@ class funCommands(commands.Cog):
     @commands.command(brief="random doggy doggy because why not")
     async def doggy(self, ctx):
         embed=discord.Embed(title="A random doggy", url="https://random.dog")
-        doggy = json.loads(requests.get("http://random.dog/json").text)["url"]
+        doggy = json.loads(requests.get("https://random.dog/woof.json").text)["url"]
         embed.set_thumbnail(url=doggy)
         await ctx.send(embed=embed)
 
