@@ -76,7 +76,7 @@ class funCommands(commands.Cog):
     @commands.command(brief="random kitty kitty because why not")
     async def kitty(self, ctx):
         embed=discord.Embed(title="A random kitty", url="https://aws.random.cat")
-        kitty = json.loads(requests.get("http://aws.random.cat/meow"))["file"]
+        kitty = json.loads(requests.get("http://aws.random.cat/meow").text)["file"]
         embed.set_thumbnail(url=kitty)
         await ctx.send(embed=embed)
 
