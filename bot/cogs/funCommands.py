@@ -73,6 +73,13 @@ class funCommands(commands.Cog):
             out = out+letter
         await ctx.send(out)
 
+    @commands.command(brief="random kitty kitty because why not")
+    async def kitty(self, ctx):
+        embed=discord.Embed(title="A random kitty", url="https://aws.random.cat")
+        kitty = json.loads(requests.get("http://aws.random.cat/meow"))["file"]
+        embed.set_thumbnail(url=kitty)
+        await ctx.send(embed=embed)
+
     @commands.command(brief="shows the skin of any minecraft java player")
     async def mcskin(self, ctx, ign):
         uuid = json.loads(requests.get("https://api.mojang.com/users/profiles/minecraft/%s" % ign).text)["id"]
