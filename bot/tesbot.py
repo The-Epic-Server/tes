@@ -30,6 +30,7 @@ class Bot(commands.Bot):
         self.load_extension("cogs.modCommands")
         self.load_extension("cogs.funCommands")
         self.load_extension("cogs.botCommands")
+        self.load_extension("cogs.leveling")
     
     async def on_ready(self):
         print('Logged on as The Epic Server#6298')
